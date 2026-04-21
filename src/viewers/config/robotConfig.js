@@ -1,0 +1,27 @@
+export const ROBOT_RUNTIME_CONFIG = {
+  faceMeshName: 'jiqirenpSphere3',
+  clipAliases: {
+    idle: ['idle'],
+    wave: ['wave'],
+    nod: ['nod'],
+  },
+  expressions: ['neutral', 'smile', 'blink', 'heart', 'glitch'],
+  keymap: {
+    Digit1: { type: 'clip', action: 'idle' },
+    Numpad1: { type: 'clip', action: 'idle' },
+    Digit2: { type: 'clip', action: 'wave' },
+    Numpad2: { type: 'clip', action: 'wave' },
+    Digit3: { type: 'clip', action: 'nod' },
+    Numpad3: { type: 'clip', action: 'nod' },
+    Digit4: { type: 'expression', action: 'neutral' },
+    Numpad4: { type: 'expression', action: 'neutral' },
+    Digit5: { type: 'expression', action: 'smile' },
+    Numpad5: { type: 'expression', action: 'smile' },
+    Digit6: { type: 'expression', action: 'blink' },
+    Numpad6: { type: 'expression', action: 'blink' },
+    Digit7: { type: 'expression', action: 'heart' },
+    Numpad7: { type: 'expression', action: 'heart' },
+    Digit8: { type: 'expression', action: 'glitch' },
+    Numpad8: { type: 'expression', action: 'glitch' },
+  },
+};

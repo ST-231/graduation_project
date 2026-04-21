@@ -1,0 +1,20 @@
+# dependencies / build output
+node_modules/
+dist/
+
+# local temp
+.tmp_ppt_parse/
+
+# env / logs / os
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+
+# do NOT upload model binaries in public
+public/3dgs/*
+!public/3dgs/.gitkeep
+
+public/mesh/*
+!public/mesh/.gitkeep
