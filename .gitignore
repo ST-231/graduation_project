@@ -12,9 +12,5 @@ dist/
 .DS_Store
 Thumbs.db
 
-# do NOT upload model binaries in public
-public/3dgs/*
-!public/3dgs/.gitkeep
-
-public/mesh/*
-!public/mesh/.gitkeep
+# track model assets in public
+# (no ignore rules for public/3dgs and public/mesh)
