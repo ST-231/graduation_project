@@ -35,8 +35,7 @@ export function createSceneExperienceRuntime({
   });
 
   const baseNodeOffsets = buildNodeOffsets(config.pathNodes, pathNodeOverrides);
-  let scaleRatio = 1;
-  const nodes = toWorldNodes(scaleOffsets(baseNodeOffsets, scaleRatio), anchor, unit);
+  const nodes = toWorldNodes(baseNodeOffsets, anchor, unit);
   const robotYOffsetBase = Math.max(0, Number(config.robotPathYOffset) || 0) * unit;
   if (nodes.length < 2) {
     billboard?.setText('Ready');
@@ -107,14 +106,10 @@ export function createSceneExperienceRuntime({
   return {
     update(delta, elapsedTime = 0, camera) {
       const activeCamera = camera || viewer?.camera;
-      const nextScaleRatio = clamp(getAverageScale(root) / baseRobotScale, 0.2, 5);
-      if (Math.abs(nextScaleRatio - scaleRatio) > 1e-4) {
-        scaleRatio = nextScaleRatio;
-        applyScaledLayout();
-      }
-      visuals.setScaleRatio?.(scaleRatio);
+      const visualScale = clamp(getAverageScale(root) / baseRobotScale, 0.2, 5);
+      visuals.setScaleRatio?.(visualScale);
       visuals.update(elapsedTime, activeCamera);
-      billboard?.update(activeCamera, scaleRatio);
+      billboard?.update(activeCamera, visualScale);
 
       if (targetNodeIndex == null) return;
       const target = nodes[targetNodeIndex].world.clone().add(new THREE.Vector3(0, getRobotYOffset(), 0));
@@ -170,7 +165,7 @@ export function createSceneExperienceRuntime({
       if (!nodes[index] || !isVec3(offset)) return false;
       const normalized = [Number(offset[0]) || 0, Number(offset[1]) || 0, Number(offset[2]) || 0];
       baseNodeOffsets[index] = normalized;
-      applyScaledLayout();
+      applyLayout();
 
       if (index === 0 && !moving) {
         root.position.copy(nodes[0].world).add(new THREE.Vector3(0, getRobotYOffset(), 0));
@@ -229,14 +224,13 @@ export function createSceneExperienceRuntime({
   }
 
   function getRobotYOffset() {
-    return robotYOffsetBase * scaleRatio;
+    return robotYOffsetBase;
   }
 
-  function applyScaledLayout() {
-    const scaledOffsets = scaleOffsets(baseNodeOffsets, scaleRatio);
+  function applyLayout() {
     for (let i = 0; i < nodes.length; i += 1) {
-      nodes[i].offset = [...scaledOffsets[i]];
-      nodes[i].world.copy(anchor).add(offsetToVector(scaledOffsets[i], unit));
+      nodes[i].offset = [...baseNodeOffsets[i]];
+      nodes[i].world.copy(anchor).add(offsetToVector(baseNodeOffsets[i], unit));
     }
     visuals.refresh(nodes);
 
@@ -309,10 +303,6 @@ function getAverageScale(obj) {
   const sy = Math.abs(Number(obj?.scale?.y) || 1);
   const sz = Math.abs(Number(obj?.scale?.z) || 1);
   return (sx + sy + sz) / 3;
-}
-
-function scaleOffsets(offsets, ratio) {
-  return offsets.map((o) => [o[0] * ratio, o[1] * ratio, o[2] * ratio]);
 }
 
 function clamp(value, min, max) {

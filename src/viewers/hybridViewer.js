@@ -8,6 +8,8 @@ import { getSceneExperienceConfig } from './config/sceneExperienceConfig.js';
 import { createSceneExperienceRuntime } from './runtime/sceneExperienceRuntime.js';
 import { createFollowCameraController } from './controllers/followCameraController.js';
 
+const ENABLE_SCENE_TRANSFORM_CORRECTION = true;
+
 export function createHybridViewer() {
   let viewer = null;
   let threeScene = null;
@@ -46,7 +48,9 @@ export function createHybridViewer() {
       });
 
       if (sceneUrl) {
-        const sceneTransform = resolveSceneTransform(getSceneTransform(sceneFile));
+        const sceneTransform = ENABLE_SCENE_TRANSFORM_CORRECTION
+          ? resolveSceneTransform(getSceneTransform(sceneFile))
+          : {};
         await viewer.addSplatScene(sceneUrl, {
           format: toSceneFormat(sceneExt),
           ...sceneTransform,
